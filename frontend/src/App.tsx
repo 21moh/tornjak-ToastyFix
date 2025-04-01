@@ -68,6 +68,7 @@ function App() {
                                 />
                                 <Route path="/server/manage" exact component={ServerManagement} />
                                 <br /><br /><br />
+                                <ToastContainer />
                             </div>
                         </div>
                     </div>
