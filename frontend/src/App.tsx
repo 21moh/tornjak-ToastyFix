@@ -22,7 +22,18 @@ import RenderOnAdminRole from 'components/RenderOnAdminRole'
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
+const showToast = () => {
+    toast.success("Welcome to the app!", {
+        position: "top-right",
+        autoClose: 3000
+    });
+};
+
 function App() {
+    useEffect(() => {
+        showToast();
+    }, []);
+
     return (
         <div>
             <Provider store={store}>
