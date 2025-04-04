@@ -1,71 +1,37 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronDown } from '@carbon/icons-react';
+// NavDropdown.tsx
 
-interface NavDropdownProps {
-  icon: React.ReactNode;
-  title: string;
-  link: string;
-  isAdmin: boolean;
-  withAuth: boolean;
-  subLinks: Array<{
-    label: string;
-    to: string;
-    adminOnly?: boolean;
-  }>;
+"use client"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ChevronDown } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+
+export default function NavDropdown() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="flex items-center gap-1">
+          More
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem asChild>
+          <Link href="/about">About</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/contact">Contact</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/settings">Settings</Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }
-
-interface NavDropdownState {
-  isOpen: boolean;
-}
-
-class NavDropdown extends React.Component<NavDropdownProps, NavDropdownState> {
-  constructor(props: NavDropdownProps) {
-    super(props);
-    this.state = {
-      isOpen: false,
-    };
-  }
-
-  toggleDropdown = () => {
-    this.setState((prevState) => ({
-      isOpen: !prevState.isOpen,
-    }));
-  };
-
-  render() {
-    const { icon, title, link, isAdmin, withAuth, subLinks } = this.props;
-    const { isOpen } = this.state;
-
-    return (
-      <div>
-        <div className="dropdown-header">
-          {icon}
-          <Link to={link} className="dropbtn">
-            {title}
-          </Link>
-          <ChevronDown
-            className="icon_spacing_drop"
-            onClick={this.toggleDropdown}
-          />
-        </div>
-        {isOpen && (
-          <div className="dropdown-content">
-            {subLinks.map((subLink, index) => {
-              if (subLink.adminOnly && !(isAdmin || !withAuth)) {
-                return null;
-              }
-              return (
-                <Link key={index} to={subLink.to} className="nav-link">
-                  {subLink.label}
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    );
-  }
-}
-
-export default NavDropdown;

@@ -1,57 +1,60 @@
-import { Component } from 'react';
-import { HeaderGlobalAction } from "carbon-components-react";
-import { UserAvatar, Notification, Search } from "@carbon/icons-react";
-import KeycloakService from "auth/KeycloakAuth";
-import {env} from '../env';
+// navbar-header-toolbar.tsx
 
-const Auth_Server_Uri = env.REACT_APP_AUTH_SERVER_URI;
+"use client"
 
-type HeaderToolBarProp = {}
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Menu } from "lucide-react"
+import Link from "next/link"
+import NavDropdown from "./NavDropdown"
 
-type HeaderToolBarState = {}
+export default function Navbar() {
+  return (
+    <header className="flex items-center justify-between px-4 py-3 border-b bg-white shadow-sm">
+      <div className="flex items-center gap-4">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <nav className="flex flex-col gap-2 mt-4">
+              <Link href="/">Home</Link>
+              <Link href="/docs">Docs</Link>
+              <NavDropdown />
+            </nav>
+          </SheetContent>
+        </Sheet>
 
-class HeaderToolBar extends Component<HeaderToolBarProp, HeaderToolBarState> {
-    constructor(props: HeaderToolBarProp) {
-        super(props);
-        this.state = {};
-    }
+        <Link href="/" className="text-lg font-semibold">
+          MyApp
+        </Link>
+      </div>
 
-    render() {
-        return (
-            <div className='header-toolbar'>
-                {Auth_Server_Uri &&
-                    <div className="user-dropdown">
-                        <HeaderGlobalAction
-                            aria-label="User">
-                            <UserAvatar />
-                        </HeaderGlobalAction>
-                        <div className="user-dropdown-content">
-                            {KeycloakService.isLoggedIn() && (
-                                // eslint-disable-next-line
-                                <a
-                                    href="#"
-                                    className="nav-link"
-                                    onClick={() => KeycloakService.doLogout()}>
-                                    Logout {KeycloakService.getFirstName()}
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                }
-                
-                <HeaderGlobalAction
-                    aria-label="Notifications"
-                    onClick={() => { alert("This is a place holder, functionality to be implemented on future work!") }}>
-                    <Notification />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction
-                    aria-label="Search"
-                    onClick={() => { alert("This is a place holder, functionality to be implemented on future work!") }}>
-                    <Search />
-                </HeaderGlobalAction>
+      <NavigationMenu className="hidden lg:flex">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link href="/" className="px-4 py-2 hover:underline">
+              Home
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/docs" className="px-4 py-2 hover:underline">
+              Docs
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavDropdown />
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
 
-            </div>
-        );
-    }
+      <div className="flex items-center gap-2">
+        <Button variant="outline">Sign In</Button>
+        <Button>Sign Up</Button>
+      </div>
+    </header>
+  )
 }
-export default HeaderToolBar;
