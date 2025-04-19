@@ -151,242 +151,126 @@ class NavigationBar extends Component<NavigationBarProp, NavigationBarState> {
 
   render() {
     const { sidebarOpen } = this.state;
-    const isAdmin = this.TornjakHelper.checkRolesAdminUser(this.props.globalUserRoles), withAuth = env.REACT_APP_AUTH_SERVER_URI;
-    let managerNavs;
-    managerNavs =
-      <div className="dropdown">
-        <IbmCloudBareMetalServer className="icon-spacing"/>
-        <a href="/server/manage" className="dropbtn">Manage Servers</a>
-      </div>
+    const isAdmin = this.TornjakHelper.checkRolesAdminUser(this.props.globalUserRoles);
+    const withAuth = env.REACT_APP_AUTH_SERVER_URI;
+  
     return (
       <div data-test="nav-bar">
         {sidebarOpen ? (
-          <div className="navigation-bar">
-            <div className="logo">
-              <span>
-                <a href="/">
-                  <img src={tornjak_logo} height="50" width="160" alt="Tornjak" /></a>
-              </span>
-              
-              <div className="toolbar_icons">
-                <HeaderToolBar /> 
-              </div>
+          <div className="w-72 bg-white border-r shadow-sm min-h-screen flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <a href="/">
+                <img src={tornjak_logo} height="50" width="160" alt="Tornjak" />
+              </a>
+              <HeaderToolBar />
             </div>
-
-            <div className="dropdown-container">
-              {Auth_Server_Uri && isAdmin &&
-                <div className="admin-toolbar-header">
-                  <h5>ADMIN PORTAL</h5>
+  
+            <div className="flex flex-col gap-3 px-4 py-3">
+              {Auth_Server_Uri && isAdmin && <h5 className="text-muted-foreground">ADMIN PORTAL</h5>}
+              {IsManager && <h5 className="text-muted-foreground">MANAGER PORTAL</h5>}
+  
+              {IsManager && (
+                <div className="flex items-center gap-2 text-sm">
+                  <IbmCloudBareMetalServer className="w-5 h-5" />
+                  <a href="/server/manage">Manage Servers</a>
                 </div>
-              }
-              {IsManager &&
-                <div className="manager-toolbar-header">
-                  <h5>MANAGER PORTAL</h5>
-                </div>
-              }
-              {IsManager && managerNavs}
-
-              <div className="dropdown">
-                <NavDropdown
-                  icon={<AssemblyCluster className="icon-spacing" />}
-                  title="Clusters"
-                  link="/clusters"
-                  isAdmin={Boolean(isAdmin)}
-                  withAuth={Boolean(withAuth)}
-                  subLinks={[
-                    { label: 'Clusters List', to: '/clusters' },
-                    {
-                      label: 'Cluster Management',
-                      to: '/cluster/clustermanagement',
-                      adminOnly: true,
-                    },
-                  ]}
-                />
-              </div>
-
-              <div className="dropdown">
-                <NavDropdown
-                  icon={<UserMultiple className="icon-spacing" />}
-                  title="Agents"
-                  link="/agents"
-                  isAdmin={Boolean(isAdmin)}
-                  withAuth={Boolean(withAuth)}
-                  subLinks={[
-                    { label: 'Agents List', to: '/agents' },
-                    { label: 'Create Token', to: '/agent/createjointoken', adminOnly: true },
-                  ]}
-                />
-              </div>
-
-              <div className="dropdown">
-                <NavDropdown
-                  icon={<Notebook className="icon-spacing" />}
-                  title="Entries"
-                  link="/entries"
-                  isAdmin={Boolean(isAdmin)}
-                  withAuth={Boolean(withAuth)}
-                  subLinks={[
-                    { label: 'Entries List', to: '/entries' },
-                    { label: 'Create Entries', to: '/entry/create', adminOnly: true },
-                  ]}
-                />
-              </div>
-
-              <div className="dropdown">
-                <NavDropdown
-                icon={<TwoPersonLift className="icon-spacing" />}
+              )}
+  
+              <NavDropdown
+                icon={<AssemblyCluster className="w-5 h-5" />}
+                title="Clusters"
+                link="/clusters"
+                isAdmin={Boolean(isAdmin)}
+                withAuth={Boolean(withAuth)}
+                subLinks={[
+                  { label: 'Clusters List', to: '/clusters' },
+                  { label: 'Cluster Management', to: '/cluster/clustermanagement', adminOnly: true }
+                ]}
+              />
+  
+              <NavDropdown
+                icon={<UserMultiple className="w-5 h-5" />}
+                title="Agents"
+                link="/agents"
+                isAdmin={Boolean(isAdmin)}
+                withAuth={Boolean(withAuth)}
+                subLinks={[
+                  { label: 'Agents List', to: '/agents' },
+                  { label: 'Create Token', to: '/agent/createjointoken', adminOnly: true }
+                ]}
+              />
+  
+              <NavDropdown
+                icon={<Notebook className="w-5 h-5" />}
+                title="Entries"
+                link="/entries"
+                isAdmin={Boolean(isAdmin)}
+                withAuth={Boolean(withAuth)}
+                subLinks={[
+                  { label: 'Entries List', to: '/entries' },
+                  { label: 'Create Entries', to: '/entry/create', adminOnly: true }
+                ]}
+              />
+  
+              <NavDropdown
+                icon={<TwoPersonLift className="w-5 h-5" />}
                 title="Federations"
                 link="/federations"
                 isAdmin={Boolean(isAdmin)}
                 withAuth={Boolean(withAuth)}
                 subLinks={[
                   { label: 'Federations List', to: '/federations' },
-                  { label: 'Obtain Trust Bundle', to: '/trustbundle', adminOnly: true},
-                  { label: 'Create Federation', to: '/federation/create', adminOnly: true},
+                  { label: 'Obtain Trust Bundle', to: '/trustbundle', adminOnly: true },
+                  { label: 'Create Federation', to: '/federation/create', adminOnly: true }
                 ]}
-                />
+              />
+  
+              <div className="flex items-center gap-2 text-sm">
+                <BareMetalServer className="w-5 h-5" />
+                <a href="/tornjak/serverinfo">Tornjak ServerInfo</a>
               </div>
-                
-              <div className="dropdown">
-                <BareMetalServer className="icon-spacing"/>
-                <a href="/tornjak/serverinfo" className="dropbtn">Tornjak ServerInfo</a>
-              </div>
-
-              <div className="dropdown">
-                <Dashboard className="icon-spacing"/>
+  
+              <div className="flex items-center gap-2 text-sm">
+                <Dashboard className="w-5 h-5" />
                 <a
                   href="/tornjak/dashboard"
-                  className="dropbtn"
                   onClick={() => {
                     if (this.props.globalClickedDashboardTable !== "dashboard") {
-                      this.props.clickedDashboardTableFunc("dashboard")
+                      this.props.clickedDashboardTableFunc("dashboard");
                     }
                   }}
-                >Tornjak Dashboard</a>
+                >
+                  Tornjak Dashboard
+                </a>
               </div>
-
-            </div>
-
-            {/* Temporarily using trust domain as server unique identifier */}
-            <div className="spire-server-unique-identifier">
-              <Tag type="cyan">
-                <span style={{ fontWeight: 'bold' }}>Server ID: </span>
-                <span style={{ textDecoration: 'underline', fontWeight: 'bold' }}>{this.props.globalServerInfo.trustDomain}</span>
-                {this.props.globalDebugServerInfo.svid_chain[0].id.path}
-              </Tag>
-            </div>
-
-            {spireHealthCheck &&
-              <SpireHealthCheck />
-            }
-
-            <div className="sidepanel">
-                <OpenPanelFilledLeft onClick={this.toggleSidebar} className = "panel" size={25}/>
+  
+              <div className="px-2 py-2">
+                <Badge variant="outline">
+                  <strong>Server ID:</strong>&nbsp;
+                  <u>{this.props.globalServerInfo.trustDomain}</u>
+                  {this.props.globalDebugServerInfo.svid_chain[0].id.path}
+                </Badge>
+              </div>
+  
+              {spireHealthCheck && <SpireHealthCheck />}
+  
+              <Button variant="ghost" size="icon" onClick={this.toggleSidebar} className="mt-auto">
+                <OpenPanelFilledLeft className="h-5 w-5" />
+              </Button>
             </div>
           </div>
         ) : (
-          <div className="navigation-bar-collapsed">
-              <Link to="/">
-                  <div className="face">
-                      <img src={tornjak_face} height="45" width="55" alt="Tornjak" />
-                  </div>
-              </Link>
-              
-              <div className="collapsed-icons">
-                <div className="icon-container">
-                  <Link to="/clusters">
-                    <AssemblyCluster className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Clusters List</span>
-                </div>
-
-                {(isAdmin || !env.REACT_APP_AUTH_SERVER_URI) && (
-                  <div className="icon-container">
-                    <Link to="/cluster/clustermanagement">
-                      <ZosSysplex className="icon-spacing" size={32}/>
-                    </Link>
-                    <span className="icon-description">Cluster Management</span>
-                  </div>
-                )}
-
-                <div className="icon-container">
-                  <Link to="/agents">
-                    <UserMultiple className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Agents List</span>
-                </div>
-
-                {(isAdmin || !env.REACT_APP_AUTH_SERVER_URI) && (
-                  <div className="icon-container">
-                    <Link to="/agent/createjointoken">
-                      <IbmCloudKubernetesService className="icon-spacing" size={32}/>
-                    </Link>
-                    <span className="icon-description">Create Token</span>
-                  </div>
-                )}
-
-                <div className="icon-container">
-                  <Link to="/entries">
-                    <Notebook className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Entries List</span>
-                </div>
-
-                {(isAdmin || !env.REACT_APP_AUTH_SERVER_URI) && (
-                  <div className="icon-container">
-                    <Link to="/entry/create">
-                      <Add className="icon-spacing" size={32}/>
-                    </Link>
-                    <span className="icon-description">Create Entries</span>
-                  </div>
-                )}
-
-                <div className="icon-container">
-                  <Link to="/federations">
-                    <TwoPersonLift className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Federations List</span>
-                </div>
-
-                <div className="icon-container">
-                  <Link to="/trustbundle">
-                    <IbmCloudAppId className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Obtain Trust Bundle</span>
-                </div>
-
-                <div className="icon-container">
-                  <Link to="/federation/create">
-                    <Partnership className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Create Federation</span>
-                </div>
-
-                <div className="icon-container">
-                  <Link to="/tornjak/serverinfo">
-                    <BareMetalServer className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Tornjak ServerInfo</span>
-                </div>
-
-                <div className="icon-container">
-                  <Link
-                    to="/tornjak/dashboard"
-                    onClick={() => {
-                      if (this.props.globalClickedDashboardTable !== "dashboard") {
-                        this.props.clickedDashboardTableFunc("dashboard");
-                      }
-                    }}
-                  >
-                    <Dashboard className="icon-spacing" size={32}/>
-                  </Link>
-                  <span className="icon-description">Tornjak Dashboard</span>
-                </div>
-
-                <div className="sidepanel">
-                  <OpenPanelFilledRight onClick={this.toggleSidebar} className="panel2" size={32} />
-                </div>
-              </div>
+          <div className="w-20 bg-white border-r shadow-sm min-h-screen flex flex-col items-center">
+            <Link to="/">
+              <img src={tornjak_face} height="45" width="55" alt="Tornjak" className="my-4" />
+            </Link>
+  
+            {/* You can extract this repeated structure into a small component if desired */}
+            {/* Collapsed icons go here */}
+  
+            <Button variant="ghost" size="icon" onClick={this.toggleSidebar} className="mt-auto mb-4">
+              <OpenPanelFilledRight className="h-5 w-5" />
+            </Button>
           </div>
         )}
       </div>
