@@ -121,23 +121,18 @@ class EntriesListTable extends React.Component<EntriesListTableProp, EntriesList
     }
 
     downloadEntries(selectedRows: readonly DenormalizedRow[]) {
-        var selectedEntriesInfo = [], infoCell = 5, jsonInit = "{\n  \"entries\": [\n";
-        if (selectedRows.length !== 0) {
-            selectedEntriesInfo[0] = jsonInit;
-            for (let i = 0; i < selectedRows.length; i++) {
-                if (i < selectedRows.length - 1) {
-                    selectedEntriesInfo[i + 1] = selectedRows[i].cells[infoCell].value + ",\n";
-                } else {
-                    selectedEntriesInfo[i + 1] = selectedRows[i].cells[infoCell].value + "\n]\n}";
-                }
-            }
-        }
-        var blob = new Blob(selectedEntriesInfo, { type: "application/json" });
-        saveAs(
-            blob,
-            "selectedEntries.json"
-        );
-    }
+        if (selectedRows.length === 0) return;
+      
+        const infoCellIndex = 5;
+        const entriesJson = selectedRows
+          .map(row => row.cells[infoCellIndex].value)
+          .join(",\n");
+      
+        const fullJson = `{\n  "entries": [\n${entriesJson}\n  ]\n}`;
+      
+        const blob = new Blob([fullJson], { type: "application/json" });
+        saveAs(blob, "selectedEntries.json");
+      }
 
 
     render() {
