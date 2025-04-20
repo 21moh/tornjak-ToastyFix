@@ -89,23 +89,19 @@ class WorkLoadAttestor extends React.Component<WorkLoadAttestorProp, WorkLoadAtt
         return true;
     };
 
-    onChangeWorkloadPlugin = (selected: { selectedItem: { label: string; }; }) => {
-        var selectors = "";
-        var sid = selected.selectedItem.label;
-        var selectorsObject: { label: string; }[] = this.props.globalWorkloadSelectorInfo[sid];
-        for (let i = 0; i < selectorsObject.length; i++) {
-            if (i !== sid.length - 1) {
-                selectors = selectors + selectorsObject[i].label + ":\n";
-            }
-            else {
-                selectors = selectors + selectorsObject[i].label + ":"
-            }
-        }
+    onChangeWorkloadPlugin = (selected: { selectedItem: { label: string } }) => {
+        const sid = selected.selectedItem.label;
+        const selectorsObject = this.props.globalWorkloadSelectorInfo[sid] || [];
+      
+        const selectors = selectorsObject
+          .map(obj => obj.label)
+          .join(':\n') + ":";
+      
         this.setState({
-            workloadPlugin: sid,
-            selectorsList: selectors,
-        })
-    }
+          workloadPlugin: sid,
+          selectorsList: selectors,
+        });
+      };
 
     render() {
         //TODO: dynamically populated pluginlist
