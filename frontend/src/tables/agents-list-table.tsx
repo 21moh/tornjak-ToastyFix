@@ -63,34 +63,30 @@ class AgentsListTable extends React.Component<AgentsListTableProp, AgentsListTab
     }
 
     prepareTableData() {
-        const { data } = this.props;
-        let listData: { props: { agent: AgentsList; }; }[] | ({ key: string; props: { agent: AgentsList; }; } | JSX.Element)[] = [];
-        if (typeof (data) === "string" || data === undefined)
-            return
-        data.forEach(val => listData.push(Object.assign({}, val)));
-        let listtabledata: { id: string, [x: string]: string; }[] = [];
-        for (let i = 0; i < listData.length; i++) {
-            listtabledata[i] = { "id": "" };
-            listtabledata[i]["id"] = (i + 1).toString();
-            listtabledata[i]["trustdomain"] = listData[i].props.agent.id.trust_domain;
-            listtabledata[i]["spiffeid"] = "spiffe://" + listData[i].props.agent.id.trust_domain + listData[i].props.agent.id.path;
-            listtabledata[i]["info"] = JSON.stringify(listData[i].props.agent, null, ' ');
-            if (this.props.globalAgentsWorkLoadAttestorInfo !== undefined) {
-                var check_id = this.props.globalAgentsWorkLoadAttestorInfo.filter(agent => (agent.spiffeid) === listtabledata[i].spiffeid);
-                if (check_id.length !== 0) {
-                    listtabledata[i]["plugin"] = check_id[0].plugin;
-                }
-                else {
-                    listtabledata[i]["plugin"] = "No Plugin Configured For Agent";
-                }
-            } else {
-                listtabledata[i]["plugin"] = "No Plugin Configured For Agent";
-            }
-        }
-        this.setState({
-            listTableData: listtabledata
-        })
-    }
+        const { data, globalAgentsWorkLoadAttestorInfo } = this.props;
+        if (typeof data === "string" || data === undefined) return;
+      
+        const listTableData = data.map((item: { props: { agent: AgentsList } }, index: number) => {
+          const { agent } = item.props;
+          const spiffeid = `spiffe://${agent.id.trust_domain}${agent.id.path}`;
+      
+          let plugin = "No Plugin Configured For Agent";
+          if (globalAgentsWorkLoadAttestorInfo !== undefined) {
+            const match = globalAgentsWorkLoadAttestorInfo.find(a => a.spiffeid === spiffeid);
+            if (match) plugin = match.plugin;
+          }
+      
+          return {
+            id: (index + 1).toString(),
+            trustdomain: agent.id.trust_domain,
+            spiffeid,
+            info: JSON.stringify(agent, null, ' '),
+            plugin
+          };
+        });
+      
+        this.setState({ listTableData });
+      }
 
     deleteAgent(selectedRows: readonly DenormalizedRow[]) {
         var id: { path: string; trust_domain: string }[] = [], endpoint = "", prefix = "spiffe://";
