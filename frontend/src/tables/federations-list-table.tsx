@@ -58,23 +58,23 @@ class FederationsListTable extends React.Component<FederationsListTableProp, Fed
 
     prepareTableData() {
         const { data } = this.props;
-        let listData: { props: { federation: FederationsList; }; }[] | ({ key: string; props: { federation: FederationsList; }; } | JSX.Element)[] = [];
-        if (typeof (data) === "string" || data === undefined)
-            return
-        data.forEach(val => listData.push(Object.assign({}, val)));
-        let listtabledata: { id: string; federationTrustDomain: string; federationBundleUrl: string; federationBundleProfile: string; info: string }[] = [];
-        for (let i = 0; i < listData.length; i++) {
-            listtabledata[i] = { id: "", federationTrustDomain: "", federationBundleUrl: "", federationBundleProfile: "", info: "" };
-            listtabledata[i]["id"] = (i + 1).toString();
-            listtabledata[i]["federationTrustDomain"] = listData[i].props.federation.trust_domain;
-            listtabledata[i]["federationBundleUrl"] = listData[i].props.federation.bundle_endpoint_url;
-            listtabledata[i]["federationBundleProfile"] = listData[i].props.federation.BundleEndpointProfile.HttpsSpiffe ? 'https_spiffe' : 'https_web';
-            listtabledata[i]["info"] = JSON.stringify(listData[i].props.federation, null, ' ');
-        }
-        this.setState({
-            listTableData: listtabledata
-        })
-    }
+        if (typeof data === "string" || data === undefined) return;
+      
+        const listTableData = data.map((item: { props: { federation: FederationsList } }, index: number) => {
+          const { federation } = item.props;
+          const profile = federation.BundleEndpointProfile.HttpsSpiffe ? 'https_spiffe' : 'https_web';
+      
+          return {
+            id: (index + 1).toString(),
+            federationTrustDomain: federation.trust_domain,
+            federationBundleUrl: federation.bundle_endpoint_url,
+            federationBundleProfile: profile,
+            info: JSON.stringify(federation, null, ' ')
+          };
+        });
+      
+        this.setState({ listTableData });
+      }
 
     render() {
         const { listTableData } = this.state;
