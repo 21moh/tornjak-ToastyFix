@@ -68,24 +68,23 @@ class ClustersListTable extends React.Component<ClustersListTableProp, ClustersL
 
     prepareTableData() {
         const { data } = this.props;
-        let listData: { props: { cluster: ClustersList; }; }[] | ({ key: string; props: { cluster: ClustersList; }; } | JSX.Element)[] = [];
-        if (typeof (data) === "string" || data === undefined)
-            return
-        data.forEach(val => listData.push(Object.assign({}, val)));
-        let listtabledata: { id: string; clusterName: string; clusterType: string; clusterManagedBy: string; clusterDomainName: string; clusterAssignedAgents: { props: { children: string } } }[] = [];
-        for (let i = 0; i < listData.length; i++) {
-            listtabledata[i] = { id: "", clusterName: "", clusterType: "", clusterManagedBy: "", clusterDomainName: "", clusterAssignedAgents: { props: { children: "" } } };
-            listtabledata[i]["id"] = (i + 1).toString();
-            listtabledata[i]["clusterName"] = listData[i].props.cluster.name;
-            listtabledata[i]["clusterType"] = listData[i].props.cluster.platformType;
-            listtabledata[i]["clusterManagedBy"] = listData[i].props.cluster.managedBy;
-            listtabledata[i]["clusterDomainName"] = listData[i].props.cluster.domainName;
-            listtabledata[i]["clusterAssignedAgents"] = <pre>{JSON.stringify(listData[i].props.cluster.agentsList, null, ' ')}</pre>
-        }
-        this.setState({
-            listTableData: listtabledata
-        })
-    }
+        if (typeof data === "string" || data === undefined) return;
+      
+        const listTableData = data.map((item: { props: { cluster: ClustersList } }, index: number) => {
+          const { cluster } = item.props;
+      
+          return {
+            id: (index + 1).toString(),
+            clusterName: cluster.name,
+            clusterType: cluster.platformType,
+            clusterManagedBy: cluster.managedBy,
+            clusterDomainName: cluster.domainName,
+            clusterAssignedAgents: <pre>{JSON.stringify(cluster.agentsList, null, ' ')}</pre>
+          };
+        });
+      
+        this.setState({ listTableData });
+      }
 
     deleteCluster(selectedRows: readonly DenormalizedRow[]) {
         if (!selectedRows || selectedRows.length === 0) return "";
