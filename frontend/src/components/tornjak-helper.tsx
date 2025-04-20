@@ -84,18 +84,24 @@ class TornjakHelper extends Component<TornjakHelperProp, TornjakHelperState> {
 
   // numberEntriesOfCluster takes in an clusterEntry and list of entries
   // returns number of workload/child entries for a cluster
-  numberEntriesOfCluster(clusterEntry: { agentsList: string | string[]; }, globalEntries: EntriesList[], globalAgents: AgentsList[]) {
-    var agents = globalAgents.filter((a: AgentsList) =>
-      clusterEntry.agentsList.includes(this.SpiffeHelper.getAgentSpiffeid(a)))
-    var entriesPerAgent = agents.map((currentAgent: AgentsList) => {
-      return this.SpiffeHelper.numberEntriesOfAgent(currentAgent, globalEntries)
-    })
-    var sum = entriesPerAgent.reduce((acc: number | undefined, curVal: number | undefined) => {
-      if (acc !== undefined && curVal !== undefined)
-        return acc + curVal;
-      return 0;
-    }, 0)
-    return sum
+  numberEntriesOfCluster(
+    clusterEntry: { agentsList: string | string[] },
+    globalEntries: EntriesList[],
+    globalAgents: AgentsList[]
+  ): number {
+    const agentIdSet = new Set(clusterEntry.agentsList);
+    
+    let sum = 0;
+  
+    for (const agent of globalAgents) {
+      const spiffeId = this.SpiffeHelper.getAgentSpiffeid(agent);
+      if (agentIdSet.has(spiffeId)) {
+        const count = this.SpiffeHelper.numberEntriesOfAgent(agent, globalEntries);
+        sum += count ?? 0;
+      }
+    }
+  
+    return sum;
   }
 
   // getClusterMetadata takes in an clusterEntry and list of entries
