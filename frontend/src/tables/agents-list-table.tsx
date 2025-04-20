@@ -127,31 +127,28 @@ class AgentsListTable extends React.Component<AgentsListTableProp, AgentsListTab
           .catch(error => showResponseToast(error, { caption: "Could not delete agent." }));
       }
 
-    banAgent(selectedRows: readonly DenormalizedRow[]) {
-        var id: { path: string; trust_domain: string }[] = [], i = 0, endpoint = "", prefix = "spiffe://"
-
-        if (IsManager) {
-            endpoint = GetApiServerUri('/manager-api/agent/ban') + "/" + this.props.globalServerSelected
-
-        } else {
-            endpoint = GetApiServerUri(apiEndpoints.spireAgentsBanApi)
-        }
-
-        if (selectedRows === undefined || !selectedRows) return ""
-
-        for (i = 0; i < selectedRows.length; i++) {
-            id[i] = { path: "", trust_domain: "" }
-            id[i].trust_domain = selectedRows[i].cells[1].value
-            id[i].path = selectedRows[i].cells[2].value.substr(selectedRows[i].cells[1].value.concat(prefix).length)
-
-            axios.post(endpoint, { id: { trust_domain: id[i].trust_domain, path: id[i].path } })
-                .then(res => {
-                    alert("Ban SUCCESS")
-                    this.componentDidMount()
-                })
-                .catch((error) => showResponseToast(error, { caption: "Could not ban agent." }))
-        }
-    }
+      banAgent(selectedRows: readonly DenormalizedRow[]) {
+        if (!selectedRows || selectedRows.length === 0) return "";
+      
+        const prefix = "spiffe://";
+        const endpoint = IsManager
+          ? `${GetApiServerUri('/manager-api/agent/ban')}/${this.props.globalServerSelected}`
+          : GetApiServerUri(apiEndpoints.spireAgentsBanApi);
+      
+        selectedRows.forEach(row => {
+          const trust_domain = row.cells[1].value;
+          const path = row.cells[2].value.replace(`${prefix}${trust_domain}`, "");
+      
+          axios.post(endpoint, { id: { trust_domain, path } })
+            .then(() => {
+              alert("Ban SUCCESS");
+              this.componentDidMount(); // Consider using a more specific refresh function if available
+            })
+            .catch(error =>
+              showResponseToast(error, { caption: "Could not ban agent." })
+            );
+        });
+      }
     render() {
         const { listTableData } = this.state;
         const headerData = [
