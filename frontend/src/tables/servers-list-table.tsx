@@ -67,23 +67,22 @@ class ServersListTable extends React.Component<ServersListTableProp, ServersList
 
     prepareTableData() {
         const { data } = this.props;
-        let listData: { props: { server: ServersList; }; }[] | ({ key: string; props: { server: ServersList; }; } | JSX.Element)[] = [];
-        if (typeof (data) === "string" || data === undefined)
-            return
-        data.forEach(val => listData.push(Object.assign({}, val)));
-        let listtabledata: { id: string; serverName: string; serverAddress: string; tls: string; mtls: string;}[] = [];
-        for (let i = 0; i < listData.length; i++) {
-            listtabledata[i] = { id: "", serverName: "", serverAddress: "", tls: "", mtls: ""};
-            listtabledata[i]["id"] = (i + 1).toString();
-            listtabledata[i]["serverName"] = listData[i].props.server.name;
-            listtabledata[i]["serverAddress"] = listData[i].props.server.address;
-            listtabledata[i]["tls"] = listData[i].props.server.tls ? listData[i].props.server.tls : "None";
-            listtabledata[i]["mtls"] = listData[i].props.server.mtls ? listData[i].props.server.mtls : "None";
-        }
-        this.setState({
-            listTableData: listtabledata
-        })
-    }
+        if (typeof data === "string" || data === undefined) return;
+      
+        const listTableData = data.map((item: { props: { server: ServersList } }, index: number) => {
+          const { server } = item.props;
+      
+          return {
+            id: (index + 1).toString(),
+            serverName: server.name,
+            serverAddress: server.address,
+            tls: server.tls || "None",
+            mtls: server.mtls || "None"
+          };
+        });
+      
+        this.setState({ listTableData });
+      }
 
     //Note: future implementation - server delete function 
     // keep code
