@@ -103,14 +103,16 @@ class ClusterManagement extends Component<ClusterManagementProp, ClusterManageme
     }
   }
   prepareClusterTypeList(): void {
-    // user prefered option
-    let localClusterTypeList = [this.state.clusterTypeManualEntryOption]
-    // cluster type list
-    for (let i = 0; i < this.props.globalClusterTypeInfo.length; i++) {
-      localClusterTypeList.push(this.props.globalClusterTypeInfo[i])
-    }
-    this.setState({ clusterTypeList: localClusterTypeList })
-  }
+  const { clusterTypeManualEntryOption } = this.state;
+  const { globalClusterTypeInfo } = this.props;
+
+  // Ensure globalClusterTypeInfo is a valid array, otherwise use an empty array
+  const clusterTypes = Array.isArray(globalClusterTypeInfo) ? globalClusterTypeInfo : [];
+
+  const localClusterTypeList = [clusterTypeManualEntryOption, ...clusterTypes];
+
+  this.setState({ clusterTypeList: localClusterTypeList });
+}
   prepareAgentsList(): void {
     const prefix = "spiffe://";
     const { globalAgentsList } = this.props;
