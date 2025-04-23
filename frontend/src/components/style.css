@@ -341,6 +341,10 @@
   margin-right: 20px;
   margin-bottom: 20px;
   width: 600px;
+  background-color: #e6f2ff;
+  border: 1px solid #0077cc;
+  padding: 8px;
+  border-radius: 4px;
 }
 
 .expiry-drop-down {
@@ -348,18 +352,30 @@
   vertical-align: top;
   margin-right: 20px;
   width: 200px;
+  background-color: #f0f8ff;
+  border: 1px solid #66a3ff;
+  padding: 6px;
+  border-radius: 4px;
 }
 
 .expiryEntryFields {
   display: inline-block;
   vertical-align: top;
   width: 200px;
+  background-color: #f5faff;
+  border: 1px solid #80bfff;
+  padding: 6px;
+  border-radius: 4px;
 }
 
 .expiryOption-field {
   display: inline-block;
   vertical-align: top;
   width: 500px;
+  background-color: #e6f7ff;
+  border: 1px solid #3399ff;
+  padding: 6px;
+  border-radius: 4px;
 }
 
 .expiryOption-entry {
@@ -367,6 +383,10 @@
   display: inline-block;
   vertical-align: top;
   width: 200px;
+  background-color: #e0f0ff;
+  border: 1px solid #4da6ff;
+  padding: 6px;
+  border-radius: 4px;
 }
 
 .federates-with-input-field {
