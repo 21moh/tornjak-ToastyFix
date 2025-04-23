@@ -95,10 +95,15 @@ class CreateJoinToken extends Component<CreateJoinTokenProp, CreateJoinTokenStat
     return [false, "", ""];
   }
 
-  onChangeSpiffeId(e: { target: { value: string; }; }): void {
+  onChangeSpiffeId(e: { target: { value: string } }): void {
+    const newSpiffeId = e.target.value;
+  
+    if (!newSpiffeId.startsWith("spiffe://")) {
+      return; // Do not update the state
+    }
     this.setState({
-      spiffeId: e.target.value
-    })
+      spiffeId: newSpiffeId
+    });
   }
 
   getApiTokenEndpoint(): string {
