@@ -185,6 +185,10 @@ class ServerManagement extends Component<ServerManagementProp, ServerManagementS
 
   onKeyFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+    if (!files || files.length === 0) {
+      this.setState({ keyFileText: "No key file selected" });
+      return;
+    }
     if (files && files[0]) {
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
@@ -202,7 +206,11 @@ class ServerManagement extends Component<ServerManagementProp, ServerManagementS
               formKeyData: Buffer.from(new Uint8Array(result)).toString("base64"),
               keyFileText: "key file load success",
             });
+          } else {
+            this.setState({ keyFileText: "Unexpected file content" });
           }
+        } else {
+          this.setState({ keyFileText: "Failed to read the key file" });
         }
       };
       reader.readAsText(files[0]);
