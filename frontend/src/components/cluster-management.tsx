@@ -112,20 +112,18 @@ class ClusterManagement extends Component<ClusterManagementProp, ClusterManageme
     this.setState({ clusterTypeList: localClusterTypeList })
   }
   prepareAgentsList(): void {
-    var prefix = "spiffe://";
-    let localAgentsIdList: AgentLabels[] = [];
-    //agents
-    if (this.props.globalAgentsList === undefined) {
-      return
-    }
-    for (let i = 0; i < this.props.globalAgentsList.length; i++) {
-      localAgentsIdList[i] = { "label": "" }
-      localAgentsIdList[i]["label"] = prefix + this.props.globalAgentsList[i].id.trust_domain + this.props.globalAgentsList[i].id.path;
-    }
-    this.setState({
-      agentsList: localAgentsIdList,
-    });
+    const prefix = "spiffe://";
+    const { globalAgentsList } = this.props;
+  
+    if (!globalAgentsList) return;
+  
+    const localAgentsIdList = globalAgentsList.map(agent => ({
+      label: `${prefix}${agent.id.trust_domain}${agent.id.path}`
+    }));
+  
+    this.setState({ agentsList: localAgentsIdList });
   }
+  
   handleTabSelect(): void {
     toast.dismiss()
   }
